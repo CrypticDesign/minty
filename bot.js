@@ -31,7 +31,7 @@ client.on('message', message => {
     }
     
     if (msg.startsWith (prefix + 'help')) {
-        message.channel.send('**List of Commands** \n**w!help** - Gives you a List of Commands \n**w!ping** - Pong! \n**fortune [question]** - Find out the answer to your questions! (BETA)');
+        message.author.send('**List of Commands** \n**w!help** - Gives you a List of Commands \n**w!ping** - Pong! \n**fortune [question]** - Find out the answer to your questions! (BETA)');
         
     }
     
