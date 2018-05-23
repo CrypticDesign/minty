@@ -5,6 +5,12 @@ var client = new discord.Client();
 
 const token = "NDQ4NjkxNDIwODEyMDE3Njkx.DeZ0Tw.4m2ZWMI4ZBFvxRyfwy7FXZQ3zNk";
 
+client.on("guildMemberAdd", function(member) {
+    member.guild.channels.find("name", "general").sendMessage("Welcome! " + member.toString() + " to our wonderful discord server! Please make sure to read the #rules!");
+    
+    member.addRole(member.guild.roles.find("name", "Member"));
+});
+
 client.on('ready', () => {
     console.log('I am ready mate!');
     
@@ -33,12 +39,6 @@ client.on('message', message => {
     if (msg.startsWith (prefix + 'help')) {
         message.author.send('**List of Commands** \n**w!help** - Gives you a List of Commands \n**w!ping** - Pong! \n**fortune [question]** - Find out the answer to your questions! (BETA)');
         
-    }
-    
-    if (msg.startsWith (prefix + 'embed')) {
-        var embed = new Discord.RichEmbed()
-            .setDescription("Hello! This is an embed!");
-        message.channel.sendEmbed(embed);
     }
     
 });
