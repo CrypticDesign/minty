@@ -35,6 +35,12 @@ client.on('message', message => {
         
     }
     
+    if (msg.startsWith (prefix + 'embed')) {
+        var embed = new Discord.RichEmbed()
+            .setDescription("Hello! This is an embed!");
+        message.channel.sendEmbed(embed);
+    }
+    
 });
 
 // THIS  MUST  BE  THIS  WAY
