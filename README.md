@@ -1,0 +1,2 @@
+# minty
+Minty Discord Bot
