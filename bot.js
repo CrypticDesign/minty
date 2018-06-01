@@ -1,57 +1,52 @@
-const prefix = "m!";
-const discord = require ('discord.js');
+const Discord = require('discord.js');
+const fs = require('fs'); 
+const bot = new Discord.Client({disableEveryone: true});
+bot.commands = new Discord.Collection();
 
-var client = new discord.Client(); 
-
-const token = process.env.TOKEN;
-
-client.on("guildMemberAdd", function(member) {
-    member.guild.channels.find("name", "general").sendMessage("Welcome! " + member.toString() + " to our wonderful discord server! Please make sure to read the #rules!");
-    
-    member.addRole(member.guild.roles.find("name", "Member"));
+fs.readdir("commands/", (err, files) => {
+  
+  if(err) console.log(err)
+  
+  let jsfile = files.filter(f => f.split(".").pop() === "js")
+  if(jsfile.length <= 0){
+    console.log("Couldn't find commands.");
+    return;
+  }
+  
+  jsfile.forEach((f, i) =>{
+    let props = require(`./commands/${f}`);
+    console.log(`${f} loaded`);
+    bot.commands.set(props.help.name, props);
+  });
+  
 });
 
-client.on('ready', () => {
-    console.log('I am ready mate!');
-    
+bot.on("ready", async () => {
+  console.log(`${bot.user.username} is online!`); 
+  bot.user.setActivity ("Playstation Grenade!", {type: "WATCHING"});
+
 });
 
-client.on('message', message => {
+bot.on("message", async message => {
+  
+  if(message.author.bot) return;
+  if(message.channel.type === "dm") return; 
+  
+  let prefix = "%";
+  let messageArray = message.content.split(' ');
+  let cmd = messageArray[0];
+  let args = messageArray.slice(1); 
+  
+  let commandfile = bot.commands.get(cmd.slice(prefix.length));
+  if(commandfile) commandfile.run(bot,message,args);
     
-    if (message.author.bot) return;
-    
-    msg = message.content.toLowerCase();
-    
-    if (msg.startsWith (prefix + 'ping')) {
-        message.channel.send('Pong! ' + client.ping + "ms");
-    }
-    
-    if (msg.startsWith (prefix + 'fortune')) {
-        fortuneMessage = message.content.slice (9);
-        number = 2;
-        var random = Math.floor (Math.random() * (number - 1 + 1)) + 1; 
-        switch (random) {
-            case 1: message.channel.send('The fortune teller has found out your answer is **yes!**!'); break;
-            case 2: message.channel.send('The fortune teller has found out your answer is **no**!'); break;
-        }
-    }
-    
-    if (msg.startsWith (prefix + 'help')) {
-        message.author.send('**List of Commands** \n**w!help** - Gives you a List of Commands \n**w!ping** - Pong! \n**fortune [question]** - Find out the answer to your questions! (BETA)');
-        
-    }
-    
-    if (msg.startsWith (prefix + 'embed')) {
-        let embeda = new Discord.RichEmbed()
-        .setTitle("This is an Embed")
-        .setDescription("It's cool!")
-        .setColor(0x0000ff);
-        
-        message.channel.send(embeda); 
-        
-    }
-    
+  if(cmd === `${prefix}help`) {
+    let helpembed = new Discord.RichEmbed()
+    .setDescription("Test!");
+      
+    return message.channel.send(helpembed);
+  }
+  
 });
 
-// THIS  MUST  BE  THIS  WAY
-client.login (token);
+bot.login(process.env.TOKEN);
