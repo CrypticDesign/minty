@@ -3,7 +3,7 @@ const discord = require ('discord.js');
 
 var client = new discord.Client(); 
 
-const token = "NDQ4NjkxNDIwODEyMDE3Njkx.DeZ0Tw.4m2ZWMI4ZBFvxRyfwy7FXZQ3zNk";
+const token = process.env.TOKEN;
 
 client.on("guildMemberAdd", function(member) {
     member.guild.channels.find("name", "general").sendMessage("Welcome! " + member.toString() + " to our wonderful discord server! Please make sure to read the #rules!");
@@ -38,6 +38,16 @@ client.on('message', message => {
     
     if (msg.startsWith (prefix + 'help')) {
         message.author.send('**List of Commands** \n**w!help** - Gives you a List of Commands \n**w!ping** - Pong! \n**fortune [question]** - Find out the answer to your questions! (BETA)');
+        
+    }
+    
+    if (msg.startsWith (prefix + 'embed')) {
+        let embeda = new Discord.RichEmbed()
+        .setTitle("This is an Embed")
+        .setDescription("It's cool!")
+        .setColor(0x0000ff);
+        
+        return message.channel.send(embeda); 
         
     }
     
