@@ -47,7 +47,7 @@ client.on('message', message => {
         .setDescription("It's cool!")
         .setColor(0x0000ff);
         
-        return message.channel.send(embeda); 
+        message.channel.send(embeda); 
         
     }
     
